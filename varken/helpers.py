@@ -39,6 +39,11 @@ def geo_lookup(ipaddress):
             geoip_download()
     except FileNotFoundError:
         geoip_download()
+        dbinfo = os.stat(dbfile)
+        db_age = now - dbinfo.st_ctime
+        if db_age > (35 * 86400):
+            os.remove(dbfile)
+            geoip_download()
 
     reader = geoip2.database.Reader(dbfile)
 
